@@ -7,25 +7,40 @@ package interfazGrafica;
 
 import DataBase.ConexionDB;
 import DataBase.ProcedimientosDAO;
+import ObjetosNegocio.Producto;
+import alertas.AlertError;
+import interfazGraficaComponentes.GestionCeldas;
+import interfazGraficaComponentes.GestionEncabezadoTabla;
+import interfazGraficaComponentes.ModeloTabla;
+import interfazGraficaComponentes.Utilidades;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 /**
  *
  * @author AlfredoPerez
  */
 public class JFrameAdministarCatalago extends javax.swing.JFrame {
-
+    
     private final ProcedimientosDAO procedimientosDAO;
     private static ResultSet resultSet;
-    
+    private List<Producto> listaProductos;
+
     /**
-     * Creates new form JFrameAdministarCatalago
+     * Creates new form NewJFrame
      */
     public JFrameAdministarCatalago() {
         procedimientosDAO = new ProcedimientosDAO(ConexionDB.conexion);
+        listaProductos = new ArrayList<>();
         initComponents();
         llenarTablaProductos();
         this.setVisible(true);
@@ -40,79 +55,104 @@ public class JFrameAdministarCatalago extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        rSPanelGradiente1 = new rspanelgradiente.RSPanelGradiente();
-        rSPanelEffect1 = new rojerusan.RSPanelEffect();
-        jPanel1 = new javax.swing.JPanel();
-        rSPanelImage1 = new rojerusan.RSPanelImage();
-        jLabel1 = new javax.swing.JLabel();
+        panelFondo = new rspanelgradiente.RSPanelGradiente();
+        panelBarraLateral = new rojerusan.RSPanelEffect();
+        etiquetaSoftMLM = new javax.swing.JLabel();
+        separadorSoftMLM = new javax.swing.JSeparator();
+        panleAgregarProducto1 = new javax.swing.JPanel();
+        fotoAgregarProducto1 = new rojerusan.RSPanelImage();
+        etiquetaAgregarProducto1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         rSPanelImage2 = new rojerusan.RSPanelImage();
         jLabel2 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        rSPanelImage3 = new rojerusan.RSPanelImage();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tablaProductos = new rojerusan.RSTableMetro();
-        rSButtonShade1 = new rscomponentshade.RSButtonShade();
+        panelEliminarProducto = new javax.swing.JPanel();
+        fotoEliminarProducto = new rojerusan.RSPanelImage();
+        etiquetaEliminarProducto = new javax.swing.JLabel();
+        panelContenidoAdministrarCatalago = new javax.swing.JPanel();
+        botonIniciarSesion = new interfazGraficaComponentes.BotonPersonalizado();
+        scrollPaneTabla = new javax.swing.JScrollPane();
+        tablaProductos = new javax.swing.JTable();
+        panelAgregarProducto = new javax.swing.JPanel();
+        fotoAgregarProducto = new rojerusan.RSPanelImage();
+        etiquetaAgregarProducto = new javax.swing.JLabel();
+        panelCavezera = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        rSPanelGradiente1.setColorPrimario(new java.awt.Color(15, 110, 252));
-        rSPanelGradiente1.setColorSecundario(new java.awt.Color(102, 102, 255));
-        rSPanelGradiente1.setGradiente(rspanelgradiente.RSPanelGradiente.Gradiente.ESQUINA_3);
-
-        rSPanelEffect1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jPanel1.setBackground(new java.awt.Color(0, 92, 179));
-        jPanel1.setPreferredSize(new java.awt.Dimension(270, 40));
-        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        panelFondo.setBackground(new java.awt.Color(204, 204, 204));
+        panelFondo.setColorPrimario(new java.awt.Color(204, 204, 204));
+        panelFondo.setColorSecundario(new java.awt.Color(204, 204, 204));
+        panelFondo.setGradiente(rspanelgradiente.RSPanelGradiente.Gradiente.ESQUINA_3);
+        panelFondo.setPreferredSize(new java.awt.Dimension(1180, 695));
+        panelFondo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jPanel1MousePressed(evt);
+                panelFondoMousePressed(evt);
             }
         });
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panelFondo.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        rSPanelImage1.setImagen(new javax.swing.ImageIcon(getClass().getResource("/img/administrarCatalago/mas.png"))); // NOI18N
-        rSPanelImage1.setPreferredSize(new java.awt.Dimension(40, 40));
-        rSPanelImage1.addMouseListener(new java.awt.event.MouseAdapter() {
+        panelBarraLateral.setBackground(new java.awt.Color(29, 48, 107));
+        panelBarraLateral.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                rSPanelImage1MousePressed(evt);
+                panelBarraLateralMousePressed(evt);
+            }
+        });
+        panelBarraLateral.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        etiquetaSoftMLM.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        etiquetaSoftMLM.setForeground(new java.awt.Color(255, 255, 255));
+        etiquetaSoftMLM.setText("Soft-MLM");
+        panelBarraLateral.add(etiquetaSoftMLM, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, -1, -1));
+        panelBarraLateral.add(separadorSoftMLM, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 170, 20));
+
+        panleAgregarProducto1.setBackground(new java.awt.Color(0, 92, 179));
+        panleAgregarProducto1.setPreferredSize(new java.awt.Dimension(270, 40));
+        panleAgregarProducto1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                panleAgregarProducto1MousePressed(evt);
+            }
+        });
+        panleAgregarProducto1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        fotoAgregarProducto1.setImagen(new javax.swing.ImageIcon(getClass().getResource("/img/administrarCatalago-mas.png"))); // NOI18N
+        fotoAgregarProducto1.setPreferredSize(new java.awt.Dimension(40, 40));
+        fotoAgregarProducto1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                fotoAgregarProducto1MousePressed(evt);
             }
         });
 
-        javax.swing.GroupLayout rSPanelImage1Layout = new javax.swing.GroupLayout(rSPanelImage1);
-        rSPanelImage1.setLayout(rSPanelImage1Layout);
-        rSPanelImage1Layout.setHorizontalGroup(
-            rSPanelImage1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout fotoAgregarProducto1Layout = new javax.swing.GroupLayout(fotoAgregarProducto1);
+        fotoAgregarProducto1.setLayout(fotoAgregarProducto1Layout);
+        fotoAgregarProducto1Layout.setHorizontalGroup(
+            fotoAgregarProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 40, Short.MAX_VALUE)
         );
-        rSPanelImage1Layout.setVerticalGroup(
-            rSPanelImage1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        fotoAgregarProducto1Layout.setVerticalGroup(
+            fotoAgregarProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 40, Short.MAX_VALUE)
         );
 
-        jPanel1.add(rSPanelImage1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, -1));
+        panleAgregarProducto1.add(fotoAgregarProducto1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, -1));
 
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 20)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Agregar producto");
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        etiquetaAgregarProducto1.setFont(new java.awt.Font("Arial", 1, 15)); // NOI18N
+        etiquetaAgregarProducto1.setForeground(new java.awt.Color(255, 255, 255));
+        etiquetaAgregarProducto1.setText("Administrar Catalago");
+        etiquetaAgregarProducto1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jLabel1MousePressed(evt);
+                etiquetaAgregarProducto1MousePressed(evt);
             }
         });
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, -1, -1));
+        panleAgregarProducto1.add(etiquetaAgregarProducto1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, -1, -1));
 
-        rSPanelEffect1.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, -1, -1));
+        panelBarraLateral.add(panleAgregarProducto1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 250, -1));
 
         jPanel2.setBackground(new java.awt.Color(0, 92, 179));
         jPanel2.setPreferredSize(new java.awt.Dimension(270, 40));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        rSPanelImage2.setImagen(new javax.swing.ImageIcon(getClass().getResource("/img/administrarCatalago/solicitar.png"))); // NOI18N
+        rSPanelImage2.setImagen(new javax.swing.ImageIcon(getClass().getResource("/img/administrarCatalago-solicitar.png"))); // NOI18N
         rSPanelImage2.setPreferredSize(new java.awt.Dimension(40, 40));
 
         javax.swing.GroupLayout rSPanelImage2Layout = new javax.swing.GroupLayout(rSPanelImage2);
@@ -128,200 +168,362 @@ public class JFrameAdministarCatalago extends javax.swing.JFrame {
 
         jPanel2.add(rSPanelImage2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, -1));
 
-        jLabel2.setFont(new java.awt.Font("Arial", 1, 20)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Inventariar producto");
         jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, -1, -1));
 
-        rSPanelEffect1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 280, -1, -1));
+        panelBarraLateral.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 280, 250, -1));
 
-        jPanel3.setBackground(new java.awt.Color(0, 92, 179));
-        jPanel3.setPreferredSize(new java.awt.Dimension(270, 40));
-        jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
+        panelEliminarProducto.setBackground(new java.awt.Color(0, 92, 179));
+        panelEliminarProducto.setPreferredSize(new java.awt.Dimension(270, 40));
+        panelEliminarProducto.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jPanel3MousePressed(evt);
+                panelEliminarProductoMousePressed(evt);
             }
         });
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panelEliminarProducto.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        rSPanelImage3.setImagen(new javax.swing.ImageIcon(getClass().getResource("/img/administrarCatalago/borrar.png"))); // NOI18N
-        rSPanelImage3.setPreferredSize(new java.awt.Dimension(40, 40));
-        rSPanelImage3.addMouseListener(new java.awt.event.MouseAdapter() {
+        fotoEliminarProducto.setImagen(new javax.swing.ImageIcon(getClass().getResource("/img/administrarCatalago-borrar.png"))); // NOI18N
+        fotoEliminarProducto.setPreferredSize(new java.awt.Dimension(40, 40));
+        fotoEliminarProducto.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                rSPanelImage3MousePressed(evt);
+                fotoEliminarProductoMousePressed(evt);
             }
         });
 
-        javax.swing.GroupLayout rSPanelImage3Layout = new javax.swing.GroupLayout(rSPanelImage3);
-        rSPanelImage3.setLayout(rSPanelImage3Layout);
-        rSPanelImage3Layout.setHorizontalGroup(
-            rSPanelImage3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout fotoEliminarProductoLayout = new javax.swing.GroupLayout(fotoEliminarProducto);
+        fotoEliminarProducto.setLayout(fotoEliminarProductoLayout);
+        fotoEliminarProductoLayout.setHorizontalGroup(
+            fotoEliminarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 40, Short.MAX_VALUE)
         );
-        rSPanelImage3Layout.setVerticalGroup(
-            rSPanelImage3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        fotoEliminarProductoLayout.setVerticalGroup(
+            fotoEliminarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 40, Short.MAX_VALUE)
         );
 
-        jPanel3.add(rSPanelImage3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, -1));
+        panelEliminarProducto.add(fotoEliminarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, -1));
 
-        jLabel3.setFont(new java.awt.Font("Arial", 1, 20)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Eliminar producto");
-        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+        etiquetaEliminarProducto.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        etiquetaEliminarProducto.setForeground(new java.awt.Color(255, 255, 255));
+        etiquetaEliminarProducto.setText("Eliminar producto");
+        etiquetaEliminarProducto.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jLabel3MousePressed(evt);
+                etiquetaEliminarProductoMousePressed(evt);
             }
         });
-        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, -1, -1));
+        panelEliminarProducto.add(etiquetaEliminarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, -1, -1));
 
-        rSPanelEffect1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, -1, -1));
+        panelBarraLateral.add(panelEliminarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 250, -1));
 
-        jLabel4.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Soft-MLM");
-        rSPanelEffect1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 50, -1, -1));
-        rSPanelEffect1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 230, 20));
+        panelFondo.add(panelBarraLateral, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 246, 700));
+
+        panelContenidoAdministrarCatalago.setBackground(new java.awt.Color(255, 255, 255));
+        panelContenidoAdministrarCatalago.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        panelContenidoAdministrarCatalago.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        botonIniciarSesion.setText("Salir");
+        botonIniciarSesion.setColorHover(new java.awt.Color(45, 116, 191));
+        botonIniciarSesion.setColorNormal(new java.awt.Color(58, 103, 201));
+        botonIniciarSesion.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        botonIniciarSesion.setPreferredSize(new java.awt.Dimension(160, 40));
+        botonIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonIniciarSesionActionPerformed(evt);
+            }
+        });
+        panelContenidoAdministrarCatalago.add(botonIniciarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 500, -1, -1));
 
         tablaProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"234234", "asdasd", "asd", "asdasd", "asdasd"},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "ID", "Nombre", "Precio venta", "Existencia", "Descripcion"
+
             }
         ));
-        tablaProductos.setAltoHead(30);
-        tablaProductos.setColorBordeFilas(new java.awt.Color(255, 255, 255));
-        tablaProductos.setColorFilasForeground1(new java.awt.Color(0, 0, 0));
-        tablaProductos.setColorFilasForeground2(new java.awt.Color(0, 0, 0));
-        tablaProductos.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        tablaProductos.setFuenteFilas(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        tablaProductos.setFuenteFilasSelect(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        tablaProductos.setFuenteHead(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        tablaProductos.setGrosorBordeFilas(0);
-        tablaProductos.setRowHeight(25);
-        tablaProductos.setRowMargin(0);
-        jScrollPane1.setViewportView(tablaProductos);
+        tablaProductos.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                tablaProductosMouseMoved(evt);
+            }
+        });
+        tablaProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tablaProductosMousePressed(evt);
+            }
+        });
+        scrollPaneTabla.setViewportView(tablaProductos);
 
-        rSButtonShade1.setBackground(new java.awt.Color(0, 0, 0));
-        rSButtonShade1.setBorder(null);
-        rSButtonShade1.setText("Salir");
-        rSButtonShade1.setBgHover(new java.awt.Color(0, 0, 84));
-        rSButtonShade1.setBgShadeHover(new java.awt.Color(0, 0, 84));
-        rSButtonShade1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        rSButtonShade1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rSButtonShade1ActionPerformed(evt);
+        panelContenidoAdministrarCatalago.add(scrollPaneTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 870, 390));
+
+        panelAgregarProducto.setBackground(new java.awt.Color(159, 249, 189));
+        panelAgregarProducto.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        panelAgregarProducto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                panelAgregarProductoMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                panelAgregarProductoMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                panelAgregarProductoMousePressed(evt);
+            }
+        });
+        panelAgregarProducto.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        fotoAgregarProducto.setImagen(new javax.swing.ImageIcon(getClass().getResource("/img/administrarCatalago-mas.png"))); // NOI18N
+        fotoAgregarProducto.setPreferredSize(new java.awt.Dimension(30, 30));
+        fotoAgregarProducto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fotoAgregarProductoMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fotoAgregarProductoMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                fotoAgregarProductoMousePressed(evt);
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("LISTA DE PRODUCTOS");
+        javax.swing.GroupLayout fotoAgregarProductoLayout = new javax.swing.GroupLayout(fotoAgregarProducto);
+        fotoAgregarProducto.setLayout(fotoAgregarProductoLayout);
+        fotoAgregarProductoLayout.setHorizontalGroup(
+            fotoAgregarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+        fotoAgregarProductoLayout.setVerticalGroup(
+            fotoAgregarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
 
-        javax.swing.GroupLayout rSPanelGradiente1Layout = new javax.swing.GroupLayout(rSPanelGradiente1);
-        rSPanelGradiente1.setLayout(rSPanelGradiente1Layout);
-        rSPanelGradiente1Layout.setHorizontalGroup(
-            rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(rSPanelGradiente1Layout.createSequentialGroup()
-                .addComponent(rSPanelEffect1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(rSPanelGradiente1Layout.createSequentialGroup()
-                        .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(rSPanelGradiente1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1))
-                            .addGroup(rSPanelGradiente1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(rSButtonShade1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(19, 19, 19))
-                    .addGroup(rSPanelGradiente1Layout.createSequentialGroup()
-                        .addGap(172, 172, 172)
-                        .addComponent(jLabel5)
-                        .addContainerGap(232, Short.MAX_VALUE))))
-        );
-        rSPanelGradiente1Layout.setVerticalGroup(
-            rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(rSPanelEffect1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rSPanelGradiente1Layout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(rSButtonShade1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10))
-        );
+        panelAgregarProducto.add(fotoAgregarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        etiquetaAgregarProducto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        etiquetaAgregarProducto.setText("Agregar Producto");
+        etiquetaAgregarProducto.setPreferredSize(new java.awt.Dimension(124, 35));
+        etiquetaAgregarProducto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                etiquetaAgregarProductoMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                etiquetaAgregarProductoMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                etiquetaAgregarProductoMousePressed(evt);
+            }
+        });
+        panelAgregarProducto.add(etiquetaAgregarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 7, -1, -1));
+
+        panelContenidoAdministrarCatalago.add(panelAgregarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 200, 50));
+
+        panelFondo.add(panelContenidoAdministrarCatalago, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 90, 910, 570));
+
+        panelCavezera.setBackground(new java.awt.Color(255, 255, 255));
+        panelCavezera.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel5.setFont(new java.awt.Font("Arial", 1, 30)); // NOI18N
+        jLabel5.setText("LISTA DE PRODUCTOS");
+        panelCavezera.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, -1, -1));
+
+        panelFondo.add(panelCavezera, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 940, 50));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(rSPanelGradiente1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelFondo, javax.swing.GroupLayout.PREFERRED_SIZE, 1180, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(rSPanelGradiente1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelFondo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void rSButtonShade1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSButtonShade1ActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_rSButtonShade1ActionPerformed
-
-    private void jLabel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MousePressed
-        JDialogAgregarProducto agregarProducto = new JDialogAgregarProducto(this, rootPaneCheckingEnabled);
+    private void fotoAgregarProductoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fotoAgregarProductoMousePressed
+        new JDialogAgregarProducto(this, rootPaneCheckingEnabled).setVisible(true);
         llenarTablaProductos();
-    }//GEN-LAST:event_jLabel1MousePressed
+    }//GEN-LAST:event_fotoAgregarProductoMousePressed
 
-    private void rSPanelImage1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rSPanelImage1MousePressed
-        JDialogAgregarProducto agregarProducto = new JDialogAgregarProducto(this, rootPaneCheckingEnabled);
-        llenarTablaProductos();
-    }//GEN-LAST:event_rSPanelImage1MousePressed
+    private void fotoEliminarProductoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fotoEliminarProductoMousePressed
+        eliminarProductosSelecionados();
+    }//GEN-LAST:event_fotoEliminarProductoMousePressed
 
-    private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
-        JDialogAgregarProducto agregarProducto = new JDialogAgregarProducto(this, rootPaneCheckingEnabled);
-        llenarTablaProductos();
-    }//GEN-LAST:event_jPanel1MousePressed
+    private void etiquetaEliminarProductoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_etiquetaEliminarProductoMousePressed
+        eliminarProductosSelecionados();
+    }//GEN-LAST:event_etiquetaEliminarProductoMousePressed
 
-    private void jLabel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MousePressed
-        //
-    }//GEN-LAST:event_jLabel3MousePressed
+    private void panelEliminarProductoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelEliminarProductoMousePressed
+        eliminarProductosSelecionados();
+    }//GEN-LAST:event_panelEliminarProductoMousePressed
 
-    private void jPanel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MousePressed
+    private void panelBarraLateralMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelBarraLateralMousePressed
+       tablaProductos.clearSelection();
+    }//GEN-LAST:event_panelBarraLateralMousePressed
+
+    private void panelFondoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelFondoMousePressed
+       tablaProductos.clearSelection();
+    }//GEN-LAST:event_panelFondoMousePressed
+
+    private void botonIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIniciarSesionActionPerformed
+       System.exit(0);
+    }//GEN-LAST:event_botonIniciarSesionActionPerformed
+
+    private void fotoAgregarProducto1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fotoAgregarProducto1MousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jPanel3MousePressed
+    }//GEN-LAST:event_fotoAgregarProducto1MousePressed
 
-    private void rSPanelImage3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rSPanelImage3MousePressed
+    private void etiquetaAgregarProducto1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_etiquetaAgregarProducto1MousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_rSPanelImage3MousePressed
+    }//GEN-LAST:event_etiquetaAgregarProducto1MousePressed
 
-    public void llenarTablaProductos(){
+    private void panleAgregarProducto1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panleAgregarProducto1MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_panleAgregarProducto1MousePressed
+
+    private void etiquetaAgregarProductoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_etiquetaAgregarProductoMousePressed
+        new JDialogAgregarProducto(this, rootPaneCheckingEnabled).setVisible(true);
+        llenarTablaProductos();
+    }//GEN-LAST:event_etiquetaAgregarProductoMousePressed
+
+    private void panelAgregarProductoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelAgregarProductoMousePressed
+        new JDialogAgregarProducto(this, rootPaneCheckingEnabled).setVisible(true);
+        llenarTablaProductos();
+    }//GEN-LAST:event_panelAgregarProductoMousePressed
+
+    private void tablaProductosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaProductosMousePressed
+        int fila = tablaProductos.rowAtPoint(evt.getPoint());
+        int columna = tablaProductos.columnAtPoint(evt.getPoint());
+
+        if (columna==Utilidades.OBSERVAR) 
+        {
+            opcionObservarProducto(fila);
+        }
+        else if (columna==Utilidades.EDITAR){
+            opcionEditarProducto(fila);
+        }
+    }//GEN-LAST:event_tablaProductosMousePressed
+
+    private void opcionObservarProducto(int fila){
+        new JDialogAgregarProducto(this, rootPaneCheckingEnabled, listaProductos.get(fila), Utilidades.OBSERVAR).setVisible(true);
+    }
+    
+    private void opcionEditarProducto(int fila){
+        new JDialogAgregarProducto(this, rootPaneCheckingEnabled, listaProductos.get(fila), Utilidades.EDITAR).setVisible(true);
+        llenarTablaProductos();
+    }
+    
+    private void panelAgregarProductoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelAgregarProductoMouseEntered
+        panelAgregarProducto.setBackground(new Color(63, 254, 127));
+    }//GEN-LAST:event_panelAgregarProductoMouseEntered
+
+    private void panelAgregarProductoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelAgregarProductoMouseExited
+        panelAgregarProducto.setBackground(new Color(159,249,189));
+    }//GEN-LAST:event_panelAgregarProductoMouseExited
+
+    private void etiquetaAgregarProductoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_etiquetaAgregarProductoMouseEntered
+        panelAgregarProducto.setBackground(new Color(63, 254, 127));
+    }//GEN-LAST:event_etiquetaAgregarProductoMouseEntered
+
+    private void etiquetaAgregarProductoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_etiquetaAgregarProductoMouseExited
+        panelAgregarProducto.setBackground(new Color(159,249,189));
+    }//GEN-LAST:event_etiquetaAgregarProductoMouseExited
+
+    private void fotoAgregarProductoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fotoAgregarProductoMouseEntered
+        panelAgregarProducto.setBackground(new Color(63, 254, 127));
+    }//GEN-LAST:event_fotoAgregarProductoMouseEntered
+
+    private void fotoAgregarProductoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fotoAgregarProductoMouseExited
+        panelAgregarProducto.setBackground(new Color(159,249,189));
+    }//GEN-LAST:event_fotoAgregarProductoMouseExited
+
+    private void tablaProductosMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaProductosMouseMoved
+        int columna = tablaProductos.columnAtPoint(evt.getPoint());
+        if(columna == 0 || columna == 1 || columna == 2 || columna == 3){tablaProductos.setCursor(new Cursor(Cursor.HAND_CURSOR));}
+        else{tablaProductos.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));}
+    }//GEN-LAST:event_tablaProductosMouseMoved
+
+    private void eliminarProductosSelecionados(){
+        int[] productosSeleccionados;
+        productosSeleccionados = tablaProductos.getSelectedRows();
+        if(productosSeleccionados.length >=1)
+        {
+          String productosAeliminar="\n Productos a eliminar:";
+          for(int cont = 0;cont < productosSeleccionados.length;cont++){
+
+              productosAeliminar = productosAeliminar+"\n"+"- "+listaProductos.get(productosSeleccionados[cont]).getNombre();
+
+          }
+          JOptionPane.showConfirmDialog(this, "Esta seguro que desa eliminar los productos seleccionados? \n"
+                                         + productosAeliminar, "Mensaje Advertencia", JOptionPane.YES_NO_CANCEL_OPTION);
+        }
+        else{
+          JOptionPane.showMessageDialog(this, "No hay ningun producto seleccionado", "Mensaje Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void llenarTablaProductos(){
         clearTable(tablaProductos);
-        String sql = "SELECT * FROM soft_mlmbd.producto";
+        listaProductos.clear();
+        
+        String[] titulos = new String[10];
+        titulos[0] = "";
+        titulos[1] = "";
+        titulos[2] = "";
+        titulos[3] = "";
+        titulos[4] = "ID";
+        titulos[5] = "Nombre";
+        titulos[6] = "Tipo Producto";
+        titulos[7] = "Precio Venta";
+        titulos[8] = "Existencia";
+        titulos[9] = "Descripcion";
+        
+        
+        actualizarTabla(titulos);
+        String sql = "CALL sp_consultaProductos()";
         DefaultTableModel tablaModelo = (DefaultTableModel) tablaProductos.getModel();
+        
+        tablaProductos.getColumnModel().getColumn(0).setResizable(false);
+        tablaProductos.getColumnModel().getColumn(1).setResizable(false);
+        tablaProductos.getColumnModel().getColumn(2).setResizable(false);
+        tablaProductos.getColumnModel().getColumn(3).setResizable(false);
+        tablaProductos.getColumnModel().getColumn(4).setResizable(false);
+        tablaProductos.getColumnModel().getColumn(5).setResizable(false);
+        tablaProductos.getColumnModel().getColumn(6).setResizable(false);
+        tablaProductos.getColumnModel().getColumn(7).setResizable(false);
+        tablaProductos.getColumnModel().getColumn(8).setResizable(false);
+        tablaProductos.getColumnModel().getColumn(9).setResizable(false);
+        
         try {
             resultSet = procedimientosDAO.ejecututarQuery(sql);
             while(resultSet.next()){
-                Object[] datos = new Object[5];
-                datos[0] = resultSet.getInt(1);
-                datos[1] = resultSet.getString(2);
-                datos[2] = resultSet.getDouble(3);
-                datos[3] = resultSet.getInt(4);
-                datos[4] = resultSet.getString(5);
-                
+                Object[] datos = new Object[10];
+                datos[0] = "OBSERVAR";
+                datos[1] = "EDITAR";
+                datos[2] = "ELIMINAR";
+                datos[3] = "INVENTARIAR";
+                datos[4] = String.valueOf(resultSet.getInt(1));
+                datos[5] = resultSet.getString(2);
+                datos[6] = resultSet.getString(3);
+                datos[7] = String.valueOf(resultSet.getDouble(4));
+                datos[8] = String.valueOf(resultSet.getInt(5));
+                datos[9] = resultSet.getString(6);
+                Blob img = resultSet.getBlob(7);
+                byte[] arrayImagen = null;
+                if(img != null){arrayImagen = img.getBytes(1,(int)img.length());}
+                 
+                listaProductos.add(new Producto(Integer.valueOf(datos[4].toString()), datos[5].toString(), datos[6].toString(), Double.valueOf(datos[7].toString()), Integer.valueOf(datos[8].toString()), datos[9].toString(),arrayImagen));
                 tablaModelo.addRow(datos);
             }
            
         } catch (SQLException ex) {
-            System.out.println("Error: "+ex.getMessage());
+            new AlertError(this, rootPaneCheckingEnabled, "Algo salio mal al conectarse con la base de datos :(").setVisible(true);
         }
     }
     
@@ -331,24 +533,105 @@ public class JFrameAdministarCatalago extends javax.swing.JFrame {
             ((DefaultTableModel) tabla.getModel()).removeRow(0);
         }
     }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(JFrameAdministarCatalago.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(JFrameAdministarCatalago.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(JFrameAdministarCatalago.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(JFrameAdministarCatalago.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new JFrameAdministarCatalago().setVisible(true);
+            }
+        });
+    }
+    
+    private void actualizarTabla(String[] titulos) {
+        
+        tablaProductos.setModel(new ModeloTabla(titulos));
+        tablaProductos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        tablaProductos.getColumnModel().getColumn(Utilidades.OBSERVAR).setCellRenderer(new GestionCeldas("icono"));
+        tablaProductos.getColumnModel().getColumn(Utilidades.EDITAR).setCellRenderer(new GestionCeldas("icono"));
+        tablaProductos.getColumnModel().getColumn(Utilidades.INVENTARIAR).setCellRenderer(new GestionCeldas("icono"));
+        tablaProductos.getColumnModel().getColumn(Utilidades.ELIMINAR).setCellRenderer(new GestionCeldas("icono"));
+        tablaProductos.getColumnModel().getColumn(Utilidades.ID).setCellRenderer(new GestionCeldas("numerico"));
+        tablaProductos.getColumnModel().getColumn(Utilidades.NOMBRE).setCellRenderer(new GestionCeldas("texto"));
+        tablaProductos.getColumnModel().getColumn(Utilidades.TIPOPRODUCTO).setCellRenderer(new GestionCeldas("texto"));
+        tablaProductos.getColumnModel().getColumn(Utilidades.PRECIOVENTA).setCellRenderer(new GestionCeldas("numerico"));
+        tablaProductos.getColumnModel().getColumn(Utilidades.EXISTENCIA).setCellRenderer(new GestionCeldas("numerico"));
+        tablaProductos.getColumnModel().getColumn(Utilidades.DESCRIPCION).setCellRenderer(new GestionCeldas("texto"));
+
+     
+        tablaProductos.getTableHeader().setReorderingAllowed(false);
+        tablaProductos.setRowHeight(30);
+        tablaProductos.setGridColor(new java.awt.Color(0, 0, 0));
+        
+        tablaProductos.getColumnModel().getColumn(Utilidades.OBSERVAR).setPreferredWidth(30);
+        tablaProductos.getColumnModel().getColumn(Utilidades.EDITAR).setPreferredWidth(30);
+        tablaProductos.getColumnModel().getColumn(Utilidades.INVENTARIAR).setPreferredWidth(30);
+        tablaProductos.getColumnModel().getColumn(Utilidades.ELIMINAR).setPreferredWidth(30);
+        tablaProductos.getColumnModel().getColumn(Utilidades.ID).setPreferredWidth(35);
+        tablaProductos.getColumnModel().getColumn(Utilidades.NOMBRE).setPreferredWidth(120);
+        tablaProductos.getColumnModel().getColumn(Utilidades.TIPOPRODUCTO).setPreferredWidth(120);
+        tablaProductos.getColumnModel().getColumn(Utilidades.PRECIOVENTA).setPreferredWidth(100);
+        tablaProductos.getColumnModel().getColumn(Utilidades.EXISTENCIA).setPreferredWidth(100);
+        tablaProductos.getColumnModel().getColumn(Utilidades.DESCRIPCION).setPreferredWidth(269);
+
+        JTableHeader jtableHeader = tablaProductos.getTableHeader();
+        jtableHeader.setDefaultRenderer(new GestionEncabezadoTabla());
+        tablaProductos.setTableHeader(jtableHeader);
+
+        scrollPaneTabla.setViewportView(tablaProductos);
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private interfazGraficaComponentes.BotonPersonalizado botonIniciarSesion;
+    private javax.swing.JLabel etiquetaAgregarProducto;
+    private javax.swing.JLabel etiquetaAgregarProducto1;
+    private javax.swing.JLabel etiquetaEliminarProducto;
+    private javax.swing.JLabel etiquetaSoftMLM;
+    private rojerusan.RSPanelImage fotoAgregarProducto;
+    private rojerusan.RSPanelImage fotoAgregarProducto1;
+    private rojerusan.RSPanelImage fotoEliminarProducto;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
-    private rscomponentshade.RSButtonShade rSButtonShade1;
-    private rojerusan.RSPanelEffect rSPanelEffect1;
-    private rspanelgradiente.RSPanelGradiente rSPanelGradiente1;
-    private rojerusan.RSPanelImage rSPanelImage1;
+    private javax.swing.JPanel panelAgregarProducto;
+    private rojerusan.RSPanelEffect panelBarraLateral;
+    private javax.swing.JPanel panelCavezera;
+    private javax.swing.JPanel panelContenidoAdministrarCatalago;
+    private javax.swing.JPanel panelEliminarProducto;
+    private rspanelgradiente.RSPanelGradiente panelFondo;
+    private javax.swing.JPanel panleAgregarProducto1;
     private rojerusan.RSPanelImage rSPanelImage2;
-    private rojerusan.RSPanelImage rSPanelImage3;
-    private rojerusan.RSTableMetro tablaProductos;
+    private javax.swing.JScrollPane scrollPaneTabla;
+    private javax.swing.JSeparator separadorSoftMLM;
+    private javax.swing.JTable tablaProductos;
     // End of variables declaration//GEN-END:variables
 }

@@ -8,8 +8,23 @@ package interfazGrafica;
 import DataBase.ConexionDB;
 import DataBase.ProcedimientosDAO;
 import ObjetosNegocio.Producto;
+import ObjetosNegocio.TipoProductos;
+import alertas.AlertError;
+import interfazGraficaComponentes.Utilidades;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.util.List;
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -18,19 +33,76 @@ import javax.swing.JOptionPane;
 public class JDialogAgregarProducto extends javax.swing.JDialog {
 
     private Producto producto;
+    private List<TipoProductos> listaTipoProductos;
     private ProcedimientosDAO procedimientosDAO;
+    private static ResultSet resultSet;
+    private File foto = null;
+    private int accion= -1;
     
     /**
-     * Creates new form JDialogAgregarProducto
+     * Creates new form NewJDialog
      * @param parent
      * @param modal
      */
     public JDialogAgregarProducto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.initComponents();
+        this.producto = new Producto();
+        this.accion = Utilidades.AGREGAR;
+        this.listaTipoProductos = new ArrayList<>();
         this.procedimientosDAO = new ProcedimientosDAO(ConexionDB.conexion);
-        initComponents();
-        setVisible(true);
+        this.llenarComboBoxTipoProductos();
     }
+    
+    public JDialogAgregarProducto(java.awt.Frame parent, boolean modal, Producto producto, int accion) {
+        super(parent, modal);
+        this.initComponents();
+        this.accion = accion;
+        this.producto = producto;
+        prepararAccion();
+    }
+    
+    private void prepararAccion(){
+        if(accion == Utilidades.OBSERVAR){
+            this.etiquetaAgregarProducto.setText("Producto ID: "+producto.getID());
+            this.botonSeleccionarFoto.setVisible(false);
+            this.txtNombre.setEditable(false);
+            this.comboBoxTipoProducto.setEditable(false);
+            this.txtPrecioVenta.setEditable(false);
+            this.txtExistencia.setEditable(false);
+            this.txtDescripcion.setEditable(false);
+            this.botonAceptar.setVisible(false);
+            this.botonCancelar.setText("Aceptar");
+            
+            this.comboBoxTipoProducto.removeAllItems();
+            this.comboBoxTipoProducto.addItem(producto.getTipoProducto());
+            this.comboBoxTipoProducto.setSelectedIndex(0);
+        }
+        else if(accion == Utilidades.EDITAR){
+            this.listaTipoProductos = new ArrayList<>();
+            this.procedimientosDAO = new ProcedimientosDAO(ConexionDB.conexion);
+            this.llenarComboBoxTipoProductos();
+            this.comboBoxTipoProducto.setSelectedItem(producto.getTipoProducto());
+            this.etiquetaAgregarProducto.setText("Actualizar Producto ID: "+producto.getID());
+            this.botonAceptar.setText("Actualizar");
+        }
+        
+            BufferedImage imagen;
+            if(producto.getFotoProducto() != null){
+                try {
+                    imagen = ImageIO.read(new ByteArrayInputStream(producto.getFotoProducto()));
+                    ImageIcon imagenProducto = new ImageIcon(imagen);
+                    fotoProducto.setImagen(imagenProducto);
+                } 
+                catch (IOException ex) {new AlertError(null, rootPaneCheckingEnabled, "Error al cargar la imagen :(").setVisible(true);}
+            }
+            
+            this.txtNombre.setText(producto.getNombre());
+            this.txtPrecioVenta.setText(String.valueOf(producto.getPrecio()));
+            this.txtExistencia.setText(String.valueOf(producto.getExistencia()));
+            this.txtDescripcion.setText(producto.getDescripcion());
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -41,247 +113,398 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        rSPanelGradiente1 = new rspanelgradiente.RSPanelGradiente();
-        tituloAgregarProducto = new javax.swing.JLabel();
-        txtPrecioVenta = new rscomponentshade.RSTextFieldShade();
-        txtNombre = new rscomponentshade.RSTextFieldShade();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        panelFormulario = new javax.swing.JPanel();
+        etiquetaAgregarProducto = new javax.swing.JLabel();
+        fotoProducto = new rojerusan.RSPanelImage();
+        botonSeleccionarFoto = new interfazGraficaComponentes.BotonPersonalizado();
+        etiquetaNombre = new javax.swing.JLabel();
+        etiquetaTipo = new javax.swing.JLabel();
+        etiquetaPrecioVenta = new javax.swing.JLabel();
+        etiquetaExistencia = new javax.swing.JLabel();
+        etiquetaDescripcion = new javax.swing.JLabel();
+        panelNombre = new javax.swing.JPanel();
+        separadorNombre = new javax.swing.JSeparator();
+        txtNombre = new javax.swing.JTextField();
+        comboBoxTipoProducto = new javax.swing.JComboBox<>();
+        panelPrecioVenta = new javax.swing.JPanel();
+        separadorPrecioVenta = new javax.swing.JSeparator();
+        txtPrecioVenta = new javax.swing.JTextField();
+        panelExistencia = new javax.swing.JPanel();
+        separadorExistencia = new javax.swing.JSeparator();
+        txtExistencia = new javax.swing.JTextField();
+        scrollPanelDescripcion = new javax.swing.JScrollPane();
         txtDescripcion = new javax.swing.JTextArea();
-        rSPanelImage1 = new rojerusan.RSPanelImage();
-        botonAgregarProducto = new rscomponentshade.RSButtonShade();
-        rSButtonShade2 = new rscomponentshade.RSButtonShade();
-        rSButtonShade3 = new rscomponentshade.RSButtonShade();
-        jLabel5 = new javax.swing.JLabel();
-        txtExistencia = new rscomponentshade.RSTextFieldShade();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        botonAceptar = new interfazGraficaComponentes.BotonPersonalizado();
+        botonCancelar = new interfazGraficaComponentes.BotonPersonalizado();
+        panelFondo1 = new javax.swing.JPanel();
+        panelFondo2 = new javax.swing.JPanel();
+        panel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        rSPanelGradiente1.setColorPrimario(new java.awt.Color(15, 110, 252));
-        rSPanelGradiente1.setColorSecundario(new java.awt.Color(102, 102, 255));
+        panelFormulario.setBackground(new java.awt.Color(255, 255, 255));
 
-        tituloAgregarProducto.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
-        tituloAgregarProducto.setForeground(new java.awt.Color(255, 255, 255));
-        tituloAgregarProducto.setText("Agregar Producto");
+        etiquetaAgregarProducto.setBackground(new java.awt.Color(0, 0, 0));
+        etiquetaAgregarProducto.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        etiquetaAgregarProducto.setText("Agregar Producto");
 
-        txtPrecioVenta.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtPrecioVenta.setPixels(0);
-        txtPrecioVenta.setPlaceholder("");
+        fotoProducto.setImagen(new javax.swing.ImageIcon(getClass().getResource("/img/agregarfotoProducto.png"))); // NOI18N
 
-        txtNombre.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtNombre.setPixels(0);
-        txtNombre.setPlaceholder("");
+        javax.swing.GroupLayout fotoProductoLayout = new javax.swing.GroupLayout(fotoProducto);
+        fotoProducto.setLayout(fotoProductoLayout);
+        fotoProductoLayout.setHorizontalGroup(
+            fotoProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        fotoProductoLayout.setVerticalGroup(
+            fotoProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 189, Short.MAX_VALUE)
+        );
 
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel1.setText("Nombre: ");
+        botonSeleccionarFoto.setText("Seleccionar Foto");
+        botonSeleccionarFoto.setColorHover(new java.awt.Color(45, 116, 191));
+        botonSeleccionarFoto.setColorNormal(new java.awt.Color(58, 103, 201));
+        botonSeleccionarFoto.setFocusable(false);
+        botonSeleccionarFoto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        botonSeleccionarFoto.setPreferredSize(new java.awt.Dimension(160, 40));
+        botonSeleccionarFoto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonSeleccionarFotoActionPerformed(evt);
+            }
+        });
 
-        jLabel2.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel2.setText("Tipo: ");
+        etiquetaNombre.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        etiquetaNombre.setForeground(new java.awt.Color(153, 153, 153));
+        etiquetaNombre.setText("Nombre: ");
+        etiquetaNombre.setPreferredSize(new java.awt.Dimension(82, 40));
 
-        jLabel3.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel3.setText("Precio venta: ");
+        etiquetaTipo.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        etiquetaTipo.setForeground(new java.awt.Color(153, 153, 153));
+        etiquetaTipo.setText("Tipo: ");
+        etiquetaTipo.setPreferredSize(new java.awt.Dimension(48, 40));
 
-        jLabel4.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel4.setText("Descripcion: ");
+        etiquetaPrecioVenta.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        etiquetaPrecioVenta.setForeground(new java.awt.Color(153, 153, 153));
+        etiquetaPrecioVenta.setText("Precio venta: ");
+        etiquetaPrecioVenta.setPreferredSize(new java.awt.Dimension(116, 40));
+
+        etiquetaExistencia.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        etiquetaExistencia.setForeground(new java.awt.Color(153, 153, 153));
+        etiquetaExistencia.setText("Existencia: ");
+        etiquetaExistencia.setPreferredSize(new java.awt.Dimension(93, 40));
+
+        etiquetaDescripcion.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        etiquetaDescripcion.setForeground(new java.awt.Color(153, 153, 153));
+        etiquetaDescripcion.setText("Descripcion: ");
+
+        panelNombre.setBackground(new java.awt.Color(255, 255, 255));
+        panelNombre.setForeground(new java.awt.Color(255, 255, 255));
+        panelNombre.setPreferredSize(new java.awt.Dimension(250, 45));
+        panelNombre.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        separadorNombre.setPreferredSize(new java.awt.Dimension(250, 10));
+        panelNombre.add(separadorNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, -1, 10));
+
+        txtNombre.setFont(new java.awt.Font("Arial", 0, 17)); // NOI18N
+        txtNombre.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        txtNombre.setBorder(null);
+        txtNombre.setPreferredSize(new java.awt.Dimension(250, 20));
+        txtNombre.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 6));
+        panelNombre.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, -1, -1));
+
+        comboBoxTipoProducto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        comboBoxTipoProducto.setMaximumRowCount(10);
+        comboBoxTipoProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar el tipo del producto" }));
+        comboBoxTipoProducto.setToolTipText("");
+        comboBoxTipoProducto.setPreferredSize(new java.awt.Dimension(250, 35));
+
+        panelPrecioVenta.setBackground(new java.awt.Color(255, 255, 255));
+        panelPrecioVenta.setForeground(new java.awt.Color(255, 255, 255));
+        panelPrecioVenta.setPreferredSize(new java.awt.Dimension(250, 45));
+        panelPrecioVenta.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        separadorPrecioVenta.setPreferredSize(new java.awt.Dimension(250, 10));
+        panelPrecioVenta.add(separadorPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, -1, 10));
+
+        txtPrecioVenta.setFont(new java.awt.Font("Arial", 0, 17)); // NOI18N
+        txtPrecioVenta.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        txtPrecioVenta.setBorder(null);
+        txtPrecioVenta.setPreferredSize(new java.awt.Dimension(250, 20));
+        txtNombre.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 6));
+        panelPrecioVenta.add(txtPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, -1, -1));
+
+        panelExistencia.setBackground(new java.awt.Color(255, 255, 255));
+        panelExistencia.setForeground(new java.awt.Color(255, 255, 255));
+        panelExistencia.setPreferredSize(new java.awt.Dimension(250, 45));
+        panelExistencia.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        separadorExistencia.setPreferredSize(new java.awt.Dimension(250, 10));
+        panelExistencia.add(separadorExistencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, -1, 10));
+
+        txtExistencia.setFont(new java.awt.Font("Arial", 0, 17)); // NOI18N
+        txtExistencia.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        txtExistencia.setBorder(null);
+        txtExistencia.setPreferredSize(new java.awt.Dimension(250, 20));
+        txtNombre.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 6));
+        panelExistencia.add(txtExistencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, -1, -1));
+
+        scrollPanelDescripcion.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scrollPanelDescripcion.setPreferredSize(new java.awt.Dimension(250, 96));
 
         txtDescripcion.setColumns(20);
-        txtDescripcion.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtDescripcion.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         txtDescripcion.setRows(5);
-        jScrollPane1.setViewportView(txtDescripcion);
+        scrollPanelDescripcion.setViewportView(txtDescripcion);
 
-        javax.swing.GroupLayout rSPanelImage1Layout = new javax.swing.GroupLayout(rSPanelImage1);
-        rSPanelImage1.setLayout(rSPanelImage1Layout);
-        rSPanelImage1Layout.setHorizontalGroup(
-            rSPanelImage1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
-        );
-        rSPanelImage1Layout.setVerticalGroup(
-            rSPanelImage1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
-        );
-
-        botonAgregarProducto.setBackground(new java.awt.Color(0, 0, 0));
-        botonAgregarProducto.setBorder(null);
-        botonAgregarProducto.setText("Agregar");
-        botonAgregarProducto.setBgHover(new java.awt.Color(0, 0, 84));
-        botonAgregarProducto.setBgShadeHover(new java.awt.Color(0, 0, 84));
-        botonAgregarProducto.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        botonAgregarProducto.addActionListener(new java.awt.event.ActionListener() {
+        botonAceptar.setText("Aceptar");
+        botonAceptar.setColorHover(new java.awt.Color(45, 116, 191));
+        botonAceptar.setColorNormal(new java.awt.Color(58, 103, 201));
+        botonAceptar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        botonAceptar.setPreferredSize(new java.awt.Dimension(160, 40));
+        botonAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonAgregarProductoActionPerformed(evt);
+                botonAceptarActionPerformed(evt);
             }
         });
 
-        rSButtonShade2.setBackground(new java.awt.Color(0, 0, 0));
-        rSButtonShade2.setBorder(null);
-        rSButtonShade2.setText("Cancelar");
-        rSButtonShade2.setBgHover(new java.awt.Color(0, 0, 84));
-        rSButtonShade2.setBgShadeHover(new java.awt.Color(0, 0, 84));
-        rSButtonShade2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        rSButtonShade2.addActionListener(new java.awt.event.ActionListener() {
+        botonCancelar.setText("Cancelar");
+        botonCancelar.setColorHover(new java.awt.Color(45, 116, 191));
+        botonCancelar.setColorNormal(new java.awt.Color(58, 103, 201));
+        botonCancelar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        botonCancelar.setPreferredSize(new java.awt.Dimension(160, 40));
+        botonCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rSButtonShade2ActionPerformed(evt);
+                botonCancelarActionPerformed(evt);
             }
         });
 
-        rSButtonShade3.setBackground(new java.awt.Color(51, 51, 51));
-        rSButtonShade3.setBorder(null);
-        rSButtonShade3.setText("Seleccionar Foto");
-        rSButtonShade3.setBgHover(new java.awt.Color(102, 102, 102));
-        rSButtonShade3.setBgShade(new java.awt.Color(51, 51, 51));
-        rSButtonShade3.setBgShadeHover(new java.awt.Color(102, 102, 102));
-        rSButtonShade3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-
-        jLabel5.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel5.setText("Existencia: ");
-
-        txtExistencia.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtExistencia.setPixels(0);
-        txtExistencia.setPlaceholder("");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.setEnabled(false);
-        jComboBox1.setPreferredSize(new java.awt.Dimension(56, 35));
-
-        javax.swing.GroupLayout rSPanelGradiente1Layout = new javax.swing.GroupLayout(rSPanelGradiente1);
-        rSPanelGradiente1.setLayout(rSPanelGradiente1Layout);
-        rSPanelGradiente1Layout.setHorizontalGroup(
-            rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(rSPanelGradiente1Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(tituloAgregarProducto)
-                    .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(rSPanelGradiente1Layout.createSequentialGroup()
-                            .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel1)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabel5))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtPrecioVenta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtExistencia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rSPanelGradiente1Layout.createSequentialGroup()
-                            .addComponent(jLabel4)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, rSPanelGradiente1Layout.createSequentialGroup()
-                                    .addComponent(botonAgregarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(rSButtonShade2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(97, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rSPanelGradiente1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(rSPanelImage1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rSButtonShade3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(179, 179, 179))
+        javax.swing.GroupLayout panelFormularioLayout = new javax.swing.GroupLayout(panelFormulario);
+        panelFormulario.setLayout(panelFormularioLayout);
+        panelFormularioLayout.setHorizontalGroup(
+            panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFormularioLayout.createSequentialGroup()
+                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFormularioLayout.createSequentialGroup()
+                        .addGap(100, 100, 100)
+                        .addComponent(etiquetaAgregarProducto))
+                    .addGroup(panelFormularioLayout.createSequentialGroup()
+                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelFormularioLayout.createSequentialGroup()
+                                .addGap(34, 34, 34)
+                                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(etiquetaTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(etiquetaNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(etiquetaPrecioVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(etiquetaExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(panelFormularioLayout.createSequentialGroup()
+                                        .addComponent(etiquetaDescripcion)
+                                        .addGap(19, 19, 19))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormularioLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(botonSeleccionarFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(panelNombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                            .addComponent(panelPrecioVenta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelExistencia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(comboBoxTipoProducto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelFormularioLayout.createSequentialGroup()
+                                .addComponent(botonAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(botonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(scrollPanelDescripcion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelFormularioLayout.createSequentialGroup()
+                                .addComponent(fotoProducto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(51, 51, 51)))))
+                .addGap(22, 34, Short.MAX_VALUE))
         );
-        rSPanelGradiente1Layout.setVerticalGroup(
-            rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(rSPanelGradiente1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(tituloAgregarProducto)
-                .addGap(25, 25, 25)
-                .addComponent(rSPanelImage1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        panelFormularioLayout.setVerticalGroup(
+            panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFormularioLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(etiquetaAgregarProducto)
+                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFormularioLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(fotoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelFormularioLayout.createSequentialGroup()
+                        .addGap(89, 89, 89)
+                        .addComponent(botonSeleccionarFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(etiquetaNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(rSButtonShade3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(etiquetaTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboBoxTipoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(18, 18, 18)
-                .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(txtPrecioVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(txtExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(etiquetaPrecioVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelPrecioVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(rSPanelGradiente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(botonAgregarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rSButtonShade2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(etiquetaExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(etiquetaDescripcion)
+                    .addComponent(scrollPanelDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33)
+                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botonAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(rSPanelGradiente1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(rSPanelGradiente1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        getContentPane().add(panelFormulario, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 470, 710));
+
+        panelFondo1.setBackground(new java.awt.Color(29, 48, 107));
+        panelFondo1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().add(panelFondo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 170, 800));
+
+        panelFondo2.setBackground(new java.awt.Color(204, 204, 204));
+        panelFondo2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        panel3.setBackground(new java.awt.Color(29, 48, 107));
+        panel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panelFondo2.add(panel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 510, 400, 290));
+
+        getContentPane().add(panelFondo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 0, 470, 800));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void rSButtonShade2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSButtonShade2ActionPerformed
-        dispose();
-    }//GEN-LAST:event_rSButtonShade2ActionPerformed
+    private void botonSeleccionarFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSeleccionarFotoActionPerformed
+        foto = seleccionarArchivo();
+        if(foto != null){
+            fotoProducto.setImagen(new javax.swing.ImageIcon(foto.getPath()));
+        }
+    }//GEN-LAST:event_botonSeleccionarFotoActionPerformed
 
-    public Boolean validarDatosProducto(){
-        return !(txtNombre.getText().isEmpty() || txtPrecioVenta.getText().isEmpty() || txtExistencia.getText().isEmpty() || txtDescripcion.getText().isEmpty());
+    private File seleccionarArchivo()
+    {
+        JFileChooser selectorArchivos = new JFileChooser();
+        
+        selectorArchivos.setFileFilter(new FileNameExtensionFilter(".png", "png",".jpg","jpg"));
+        
+        int opcion = selectorArchivos.showOpenDialog(this);
+        
+        if(opcion ==JFileChooser.APPROVE_OPTION)
+        {
+            File archivo = selectorArchivos.getSelectedFile();
+            String url=archivo.getAbsolutePath();
+            String extencion = url.substring(url.indexOf('.'), (url.length()));
+            if(extencion.equals(".jpg")||extencion.equals(".png")){
+                return archivo;
+            }else{new AlertError(null, rootPaneCheckingEnabled, "Extencion incorrecta\n solo se aceptan .jpg o .png").setVisible(true);return null;}
+        }else{return null;}
     }
     
-    private void botonAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgregarProductoActionPerformed
-        
+    private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
         if(validarDatosProducto()){
-            try {
-                producto = new Producto(txtNombre.getText(),
-                        Double.valueOf(txtPrecioVenta.getText()),
+           try {
+               byte[] arregloImagen = null;
+               if(foto != null){
+                   arregloImagen = Files.readAllBytes(foto.toPath());
+               }
+               else if(producto.getFotoProducto() != null){
+                   arregloImagen = producto.getFotoProducto();
+               }
+                   producto.setNombre(txtNombre.getText());
+                   producto.setTipoProductoID(listaTipoProductos.get(comboBoxTipoProducto.getSelectedIndex()-1).getID());
+                   producto.setPrecio(Double.valueOf(txtPrecioVenta.getText()));
+                   producto.setExistencia(Integer.valueOf(txtExistencia.getText()));
+                   producto.setDescripcion(txtDescripcion.getText());
+                   producto.setFotoProducto(arregloImagen);
+                
+                           /*Producto productoAgregado = new Producto(txtNombre.getText(),
+                                        listaTipoProductos.get(comboBoxTipoProducto.getSelectedIndex()-1).getID(),
+                         Double.valueOf(txtPrecioVenta.getText()),
                         Integer.valueOf(txtExistencia.getText()),
-                        txtDescripcion.getText());
-                procedimientosDAO.agregarProducto(producto);
+                                        txtDescripcion.getText(), 
+                                        arregloImagen);*/
+                 
+                if(accion == Utilidades.AGREGAR){procedimientosDAO.agregarProducto(producto);}
+                else if(accion == Utilidades.EDITAR){System.out.println("SE ACTUALIZO");procedimientosDAO.actualizarProducto(producto);}
+                
+                
                 dispose();
             } catch (SQLException ex) {
-                System.out.println("Error en la conexion a la base de datos:"+ex.getMessage());
+                System.out.println("error: "+ex.getMessage());
+                new AlertError(null, rootPaneCheckingEnabled, "Algo salio mal al conectarse con la base de datos :(").setVisible(true);
+            } catch (IOException ex) {
+                new AlertError(null, rootPaneCheckingEnabled, "Algo salio mal al convertir el archivo :(").setVisible(true);
             }
         }
         else{
-            JOptionPane.showMessageDialog(this, "No puede haber campos vacios!", "Error", JOptionPane.ERROR_MESSAGE);
+            new AlertError(null, rootPaneCheckingEnabled, "No puede haber campos vacios!").setVisible(true);
         }
-    }//GEN-LAST:event_botonAgregarProductoActionPerformed
+    }//GEN-LAST:event_botonAceptarActionPerformed
 
+    private Boolean validarDatosProducto(){
+        return !(txtNombre.getText().isEmpty() || comboBoxTipoProducto.getSelectedItem().toString().equals("Seleccionar el tipo del producto") ||txtPrecioVenta.getText().isEmpty() || txtExistencia.getText().isEmpty() || txtDescripcion.getText().isEmpty());
+    }
+    
+    private void llenarComboBoxTipoProductos(){
+        String sql = "SELECT * FROM soft_mlmbd.tipoproducto;";
+        
+        try {
+            resultSet = procedimientosDAO.ejecututarQuery(sql);
+            while(resultSet.next()){
+                Object[] datos = new Object[2];
+                datos[0] = resultSet.getInt(1);
+                datos[1] = resultSet.getString(2);
+                
+                comboBoxTipoProducto.addItem(datos[1].toString());
+                listaTipoProductos.add(new TipoProductos((int) datos[0], (String) datos[1]));
+            }
+           
+        } catch (SQLException ex) {
+            new AlertError(null, rootPaneCheckingEnabled, "Algo salio mal al conectarse con la base de datos :(").setVisible(true);
+        }
+        
+        
+    }
+    
+    
+    private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
+        dispose();
+    }//GEN-LAST:event_botonCancelarActionPerformed
+
+    
+    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private rscomponentshade.RSButtonShade botonAgregarProducto;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JScrollPane jScrollPane1;
-    private rscomponentshade.RSButtonShade rSButtonShade2;
-    private rscomponentshade.RSButtonShade rSButtonShade3;
-    private rspanelgradiente.RSPanelGradiente rSPanelGradiente1;
-    private rojerusan.RSPanelImage rSPanelImage1;
-    private javax.swing.JLabel tituloAgregarProducto;
+    private interfazGraficaComponentes.BotonPersonalizado botonAceptar;
+    private interfazGraficaComponentes.BotonPersonalizado botonCancelar;
+    private interfazGraficaComponentes.BotonPersonalizado botonSeleccionarFoto;
+    private javax.swing.JComboBox<String> comboBoxTipoProducto;
+    private javax.swing.JLabel etiquetaAgregarProducto;
+    private javax.swing.JLabel etiquetaDescripcion;
+    private javax.swing.JLabel etiquetaExistencia;
+    private javax.swing.JLabel etiquetaNombre;
+    private javax.swing.JLabel etiquetaPrecioVenta;
+    private javax.swing.JLabel etiquetaTipo;
+    private rojerusan.RSPanelImage fotoProducto;
+    private javax.swing.JPanel panel3;
+    private javax.swing.JPanel panelExistencia;
+    private javax.swing.JPanel panelFondo1;
+    private javax.swing.JPanel panelFondo2;
+    private javax.swing.JPanel panelFormulario;
+    private javax.swing.JPanel panelNombre;
+    private javax.swing.JPanel panelPrecioVenta;
+    private javax.swing.JScrollPane scrollPanelDescripcion;
+    private javax.swing.JSeparator separadorExistencia;
+    private javax.swing.JSeparator separadorNombre;
+    private javax.swing.JSeparator separadorPrecioVenta;
     private javax.swing.JTextArea txtDescripcion;
-    private rscomponentshade.RSTextFieldShade txtExistencia;
-    private rscomponentshade.RSTextFieldShade txtNombre;
-    private rscomponentshade.RSTextFieldShade txtPrecioVenta;
+    private javax.swing.JTextField txtExistencia;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtPrecioVenta;
     // End of variables declaration//GEN-END:variables
 }

@@ -83,7 +83,7 @@ public class JDialogRegistroVentas extends javax.swing.JDialog {
         rSToggleButtonShade2.setText("Finalizar");
         rSToggleButtonShade2.setFont(new java.awt.Font("Arial", 1, 15)); // NOI18N
 
-        rSPanelImage1.setImagen(new javax.swing.ImageIcon(getClass().getResource("/img/registroVentas/carrito-de-la-compra.png"))); // NOI18N
+        rSPanelImage1.setImagen(new javax.swing.ImageIcon(getClass().getResource("/img/registroVentas-carrito.png"))); // NOI18N
         rSPanelImage1.setPreferredSize(new java.awt.Dimension(60, 60));
 
         javax.swing.GroupLayout rSPanelImage1Layout = new javax.swing.GroupLayout(rSPanelImage1);
