@@ -61,6 +61,10 @@ public class Producto {
         this.fotoProducto = fotoProducto;
     }
 
+   
+    
+    
+
     public String getNombre() {
         return nombre;
     }

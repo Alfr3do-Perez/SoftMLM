@@ -7,6 +7,9 @@ package interfazGrafica;
 
 import DataBase.ConexionDB;
 import DataBase.ProcedimientosDAO;
+import alarmas.AlertaError;
+import componentes.Utilidades;
+import java.awt.Toolkit;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -27,6 +30,7 @@ public class JFrameLogin extends javax.swing.JFrame {
         conexionDB = new ConexionDB();
         initComponents();
         procedimientosDAO = new ProcedimientosDAO(ConexionDB.conexion);
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/icon.png")));
     }
 
     /**
@@ -42,6 +46,7 @@ public class JFrameLogin extends javax.swing.JFrame {
         panelLado = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         separadorSoftMLM = new javax.swing.JSeparator();
+        botonSalirVentas = new componentes.BotonPersonalizado();
         etiquetaIniciarSesion = new javax.swing.JLabel();
         etiquetaUsuario = new javax.swing.JLabel();
         etiquetaContraseña = new javax.swing.JLabel();
@@ -51,11 +56,11 @@ public class JFrameLogin extends javax.swing.JFrame {
         panelCampoUsuario = new javax.swing.JPanel();
         jSeparator2 = new javax.swing.JSeparator();
         txtContraseña = new javax.swing.JPasswordField();
-        botonIniciarSesion = new interfazGraficaComponentes.BotonPersonalizado();
+        botonIniciarSesion = new componentes.BotonPersonalizado();
         rSPanelImage1 = new rojerusan.RSPanelImage();
-        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         panelFondo.setBackground(new java.awt.Color(255, 255, 255));
         panelFondo.setForeground(new java.awt.Color(204, 204, 255));
@@ -65,11 +70,24 @@ public class JFrameLogin extends javax.swing.JFrame {
         panelLado.setBackground(new java.awt.Color(29, 48, 107));
         panelLado.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 45)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("SoftMLM");
         panelLado.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, -1, -1));
         panelLado.add(separadorSoftMLM, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 220, 30));
+
+        botonSalirVentas.setBackground(new java.awt.Color(29, 48, 107));
+        botonSalirVentas.setText("SALIR");
+        botonSalirVentas.setColorHover(new java.awt.Color(29, 52, 122));
+        botonSalirVentas.setColorNormal(new java.awt.Color(29, 48, 107));
+        botonSalirVentas.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        botonSalirVentas.setPreferredSize(new java.awt.Dimension(160, 40));
+        botonSalirVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonSalirVentasActionPerformed(evt);
+            }
+        });
+        panelLado.add(botonSalirVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 510, 330, 60));
 
         panelFondo.add(panelLado, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 330, 570));
 
@@ -139,14 +157,6 @@ public class JFrameLogin extends javax.swing.JFrame {
 
         panelFondo.add(rSPanelImage1, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 50, 70, 70));
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        panelFondo.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 500, -1, -1));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -170,37 +180,42 @@ public class JFrameLogin extends javax.swing.JFrame {
     
     
     private void botonIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIniciarSesionActionPerformed
-        JFrameAdministarCatalago administrarCatalago = new JFrameAdministarCatalago();
-        /*if(validarDatos()){
+        //JFrameAdministarCatalago administrarCatalago = new JFrameAdministarCatalago();
+       if(validarDatos()){
             char[] arrayC = txtContraseña.getPassword();
             String contraseña = new String(arrayC);
             if(comprobarUsuario(txtUsuario1.getText(), contraseña)){
                this.dispose();
-               NewJFrame administrarCatalago = new NewJFrame();
+               JFrameAdministarCatalago administrarCatalago = new JFrameAdministarCatalago();
             }
             else{
-                new AlertError(this, rootPaneCheckingEnabled, "El usuario o la contraseña son incorrectos!").setVisible(true);
+                new AlertaError(this, rootPaneCheckingEnabled, "El usuario o la contraseña son incorrectos!").setVisible(true);
             }
         }
         else{
-            new AlertError(this, rootPaneCheckingEnabled, "No puede haber campos vacios!").setVisible(true);
-        }*/
+            new AlertaError(this, rootPaneCheckingEnabled, "No puede haber campos vacios!").setVisible(true);
+        }
     }//GEN-LAST:event_botonIniciarSesionActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       new JDialogAgregarProducto(this, rootPaneCheckingEnabled).setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void botonSalirVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSalirVentasActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_botonSalirVentasActionPerformed
 
     
     private Boolean comprobarUsuario(String usuario, String contraseña){
-        String sql = "SELECT Usuario, Contraseña FROM soft_mlmbd.empleado";
+        String sql = "SELECT EmpleadoID, Usuario, Contraseña FROM soft_mlmbd.empleado";
         try {
             resultSet = procedimientosDAO.ejecututarQuery(sql);
             while(resultSet.next()){
-                Object[] datos = new Object[5];
-                datos[0] = resultSet.getString(1);
+                Object[] datos = new Object[3];
+                datos[0] = resultSet.getInt(1);
                 datos[1] = resultSet.getString(2);
-                return (usuario.equals(datos[0])) && (contraseña.equals(datos[1]));
+                datos[2] = resultSet.getString(3);
+                if((usuario.equals(datos[1])) && (contraseña.equals(datos[2]))){
+                   Utilidades.ID_EMPLEADO = (int)datos[0];
+                   System.out.println("Empleado id:"+Utilidades.ID_EMPLEADO);
+                   return true;
+                }
             }
            
         } catch (SQLException ex) {
@@ -245,11 +260,11 @@ public class JFrameLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private interfazGraficaComponentes.BotonPersonalizado botonIniciarSesion;
+    private componentes.BotonPersonalizado botonIniciarSesion;
+    private componentes.BotonPersonalizado botonSalirVentas;
     private javax.swing.JLabel etiquetaContraseña;
     private javax.swing.JLabel etiquetaIniciarSesion;
     private javax.swing.JLabel etiquetaUsuario;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;

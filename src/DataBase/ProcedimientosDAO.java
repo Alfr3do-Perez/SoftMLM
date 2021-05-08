@@ -5,14 +5,15 @@
  */
 package DataBase;
 
+import ObjetosNegocio.DetallesVenta;
 import ObjetosNegocio.Producto;
+import ObjetosNegocio.Venta;
 import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 import javax.sql.rowset.serial.SerialBlob;
 
 /**
@@ -68,11 +69,55 @@ public class ProcedimientosDAO {
         CallableStatement.setInt(5, producto.getExistencia());
         CallableStatement.setString(6, producto.getDescripcion());
         Blob imagenBlob = null;
+        
         if(producto.getFotoProducto() != null){imagenBlob = new SerialBlob(producto.getFotoProducto());}
         CallableStatement.setBlob(7,imagenBlob);
-        
         CallableStatement.execute();
         CallableStatement.close();
         System.out.println("El producto se actualizo correctamente");
     }
+    
+    public void eliminarProducto(Producto producto) throws SQLException
+    {
+        String sql = "{ CALL sp_eliminarProducto(?) }";
+        CallableStatement = conexion.prepareCall(sql);
+        CallableStatement.setInt(1, producto.getID());
+        CallableStatement.execute();
+        CallableStatement.close();
+        System.out.println("El producto se elimino correctamente");
+    }
+    
+    public void agregarVenta(Venta venta) throws SQLException
+    {
+        
+        String sql = "CALL sp_agregarVenta(?,?,?,?,?,?);";
+        CallableStatement = conexion.prepareCall(sql);
+        
+        CallableStatement.setInt(1, venta.getID());
+        CallableStatement.setDate(2, venta.getFechaVenta());
+        CallableStatement.setInt(3, venta.getEmpleadoID());
+        CallableStatement.setDouble(4, venta.getSubtotal());
+        CallableStatement.setDouble(5, venta.getIva());
+        CallableStatement.setDouble(6, venta.getPrecioTotal());
+        
+        CallableStatement.execute();
+        CallableStatement.close();
+        System.out.println("La venta se agrego correctamente");
+    }
+    
+    public void agregarDetalleVenta(DetallesVenta detalleVenta) throws SQLException
+    {
+        String sql = "CALL sp_agregarDetallesVenta(?,?,?);";
+        CallableStatement = conexion.prepareCall(sql);
+        
+        CallableStatement.setInt(1, detalleVenta.getVentaID());
+        CallableStatement.setInt(2, detalleVenta.getCantidad());
+        CallableStatement.setInt(3, detalleVenta.getProductoID());
+        
+        CallableStatement.execute();
+        CallableStatement.close();
+        System.out.println("El detalle de la venta se agrego correctamente");
+    }
+    
+   
 }

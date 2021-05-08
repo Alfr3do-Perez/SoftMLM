@@ -5,7 +5,8 @@
  */
 package DataBase;
 
-import com.mysql.jdbc.Connection;
+
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -18,7 +19,7 @@ public class ConexionDB
     private static String DRIVER="com.mysql.jdbc.Driver";
     private static String USUARIO="root";
     private static String CONTRASEÑA="root123";
-    private static String URL="jdbc:mysql://localhost:3306/soft_mlmbd";
+    private static String URL="jdbc:mysql://localhost:3306/soft_mlmbd?zeroDateTimeBehavior=convertToNull&serverTimezone=UTC";
     public static Connection conexion;
     
     public ConexionDB(){

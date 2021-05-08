@@ -9,8 +9,8 @@ import DataBase.ConexionDB;
 import DataBase.ProcedimientosDAO;
 import ObjetosNegocio.Producto;
 import ObjetosNegocio.TipoProductos;
-import alertas.AlertError;
-import interfazGraficaComponentes.Utilidades;
+import alarmas.*;
+import componentes.Utilidades;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -38,6 +38,7 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
     private static ResultSet resultSet;
     private File foto = null;
     private int accion= -1;
+    private static int respuesta=0;
     
     /**
      * Creates new form NewJDialog
@@ -63,17 +64,25 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
     }
     
     private void prepararAccion(){
-        if(accion == Utilidades.OBSERVAR){
-            this.etiquetaAgregarProducto.setText("Producto ID: "+producto.getID());
+        if(accion == Utilidades.OBSERVAR || accion == Utilidades.ELIMINAR){
+            if(accion == Utilidades.OBSERVAR){
+                this.etiquetaAgregarProducto.setText("Producto ID: "+producto.getID());
+                this.botonAceptar.setVisible(false);
+                this.botonCancelar.setText("Aceptar");
+            }
+            else if(accion == Utilidades.ELIMINAR){
+                this.procedimientosDAO = new ProcedimientosDAO(ConexionDB.conexion);
+                this.etiquetaAgregarProducto.setText("Eliminar Producto ID: "+producto.getID());
+                this.etiquetaAgregarProducto.setFont(new java.awt.Font("Segoe UI", 0, 32));
+                this.botonAceptar.setText("Eliminar");
+            }
+            
             this.botonSeleccionarFoto.setVisible(false);
             this.txtNombre.setEditable(false);
             this.comboBoxTipoProducto.setEditable(false);
             this.txtPrecioVenta.setEditable(false);
             this.txtExistencia.setEditable(false);
             this.txtDescripcion.setEditable(false);
-            this.botonAceptar.setVisible(false);
-            this.botonCancelar.setText("Aceptar");
-            
             this.comboBoxTipoProducto.removeAllItems();
             this.comboBoxTipoProducto.addItem(producto.getTipoProducto());
             this.comboBoxTipoProducto.setSelectedIndex(0);
@@ -81,9 +90,11 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
         else if(accion == Utilidades.EDITAR){
             this.listaTipoProductos = new ArrayList<>();
             this.procedimientosDAO = new ProcedimientosDAO(ConexionDB.conexion);
+            this.txtExistencia.setEditable(false);
             this.llenarComboBoxTipoProductos();
             this.comboBoxTipoProducto.setSelectedItem(producto.getTipoProducto());
             this.etiquetaAgregarProducto.setText("Actualizar Producto ID: "+producto.getID());
+            this.etiquetaAgregarProducto.setFont(new java.awt.Font("Segoe UI", 0, 32));
             this.botonAceptar.setText("Actualizar");
         }
         
@@ -94,7 +105,7 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
                     ImageIcon imagenProducto = new ImageIcon(imagen);
                     fotoProducto.setImagen(imagenProducto);
                 } 
-                catch (IOException ex) {new AlertError(null, rootPaneCheckingEnabled, "Error al cargar la imagen :(").setVisible(true);}
+                catch (IOException ex) {new AlertaError(null, rootPaneCheckingEnabled, "Error al cargar la imagen :(").setVisible(true);}
             }
             
             this.txtNombre.setText(producto.getNombre());
@@ -116,7 +127,7 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
         panelFormulario = new javax.swing.JPanel();
         etiquetaAgregarProducto = new javax.swing.JLabel();
         fotoProducto = new rojerusan.RSPanelImage();
-        botonSeleccionarFoto = new interfazGraficaComponentes.BotonPersonalizado();
+        botonSeleccionarFoto = new componentes.BotonPersonalizado();
         etiquetaNombre = new javax.swing.JLabel();
         etiquetaTipo = new javax.swing.JLabel();
         etiquetaPrecioVenta = new javax.swing.JLabel();
@@ -134,21 +145,21 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
         txtExistencia = new javax.swing.JTextField();
         scrollPanelDescripcion = new javax.swing.JScrollPane();
         txtDescripcion = new javax.swing.JTextArea();
-        botonAceptar = new interfazGraficaComponentes.BotonPersonalizado();
-        botonCancelar = new interfazGraficaComponentes.BotonPersonalizado();
+        botonAceptar = new componentes.BotonPersonalizado();
+        botonCancelar = new componentes.BotonPersonalizado();
         panelFondo1 = new javax.swing.JPanel();
-        panelFondo2 = new javax.swing.JPanel();
-        panel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         panelFormulario.setBackground(new java.awt.Color(255, 255, 255));
+        panelFormulario.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         etiquetaAgregarProducto.setBackground(new java.awt.Color(0, 0, 0));
         etiquetaAgregarProducto.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         etiquetaAgregarProducto.setText("Agregar Producto");
+        panelFormulario.add(etiquetaAgregarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 20, -1, -1));
 
         fotoProducto.setImagen(new javax.swing.ImageIcon(getClass().getResource("/img/agregarfotoProducto.png"))); // NOI18N
 
@@ -156,12 +167,14 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
         fotoProducto.setLayout(fotoProductoLayout);
         fotoProductoLayout.setHorizontalGroup(
             fotoProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 239, Short.MAX_VALUE)
         );
         fotoProductoLayout.setVerticalGroup(
             fotoProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 189, Short.MAX_VALUE)
         );
+
+        panelFormulario.add(fotoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, -1, -1));
 
         botonSeleccionarFoto.setText("Seleccionar Foto");
         botonSeleccionarFoto.setColorHover(new java.awt.Color(45, 116, 191));
@@ -174,30 +187,36 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
                 botonSeleccionarFotoActionPerformed(evt);
             }
         });
+        panelFormulario.add(botonSeleccionarFoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 130, 30));
 
         etiquetaNombre.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         etiquetaNombre.setForeground(new java.awt.Color(153, 153, 153));
         etiquetaNombre.setText("Nombre: ");
         etiquetaNombre.setPreferredSize(new java.awt.Dimension(82, 40));
+        panelFormulario.add(etiquetaNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(82, 296, -1, -1));
 
         etiquetaTipo.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         etiquetaTipo.setForeground(new java.awt.Color(153, 153, 153));
         etiquetaTipo.setText("Tipo: ");
         etiquetaTipo.setPreferredSize(new java.awt.Dimension(48, 40));
+        panelFormulario.add(etiquetaTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(116, 352, -1, -1));
 
         etiquetaPrecioVenta.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         etiquetaPrecioVenta.setForeground(new java.awt.Color(153, 153, 153));
         etiquetaPrecioVenta.setText("Precio venta: ");
         etiquetaPrecioVenta.setPreferredSize(new java.awt.Dimension(116, 40));
+        panelFormulario.add(etiquetaPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(48, 405, -1, -1));
 
         etiquetaExistencia.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         etiquetaExistencia.setForeground(new java.awt.Color(153, 153, 153));
         etiquetaExistencia.setText("Existencia: ");
         etiquetaExistencia.setPreferredSize(new java.awt.Dimension(93, 40));
+        panelFormulario.add(etiquetaExistencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 461, -1, -1));
 
         etiquetaDescripcion.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         etiquetaDescripcion.setForeground(new java.awt.Color(153, 153, 153));
         etiquetaDescripcion.setText("Descripcion: ");
+        panelFormulario.add(etiquetaDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(34, 517, -1, -1));
 
         panelNombre.setBackground(new java.awt.Color(255, 255, 255));
         panelNombre.setForeground(new java.awt.Color(255, 255, 255));
@@ -214,11 +233,14 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
         txtNombre.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 6));
         panelNombre.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, -1, -1));
 
+        panelFormulario.add(panelNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(168, 296, 266, -1));
+
         comboBoxTipoProducto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         comboBoxTipoProducto.setMaximumRowCount(10);
         comboBoxTipoProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar el tipo del producto" }));
         comboBoxTipoProducto.setToolTipText("");
         comboBoxTipoProducto.setPreferredSize(new java.awt.Dimension(250, 35));
+        panelFormulario.add(comboBoxTipoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(168, 359, -1, -1));
 
         panelPrecioVenta.setBackground(new java.awt.Color(255, 255, 255));
         panelPrecioVenta.setForeground(new java.awt.Color(255, 255, 255));
@@ -235,6 +257,8 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
         txtNombre.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 6));
         panelPrecioVenta.add(txtPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, -1, -1));
 
+        panelFormulario.add(panelPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(168, 405, 266, -1));
+
         panelExistencia.setBackground(new java.awt.Color(255, 255, 255));
         panelExistencia.setForeground(new java.awt.Color(255, 255, 255));
         panelExistencia.setPreferredSize(new java.awt.Dimension(250, 45));
@@ -248,7 +272,14 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
         txtExistencia.setBorder(null);
         txtExistencia.setPreferredSize(new java.awt.Dimension(250, 20));
         txtNombre.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 6));
+        txtExistencia.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txtExistenciaMousePressed(evt);
+            }
+        });
         panelExistencia.add(txtExistencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, -1, -1));
+
+        panelFormulario.add(panelExistencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(168, 461, 266, -1));
 
         scrollPanelDescripcion.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         scrollPanelDescripcion.setPreferredSize(new java.awt.Dimension(250, 96));
@@ -257,6 +288,8 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
         txtDescripcion.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         txtDescripcion.setRows(5);
         scrollPanelDescripcion.setViewportView(txtDescripcion);
+
+        panelFormulario.add(scrollPanelDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(168, 517, -1, -1));
 
         botonAceptar.setText("Aceptar");
         botonAceptar.setColorHover(new java.awt.Color(45, 116, 191));
@@ -268,6 +301,7 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
                 botonAceptarActionPerformed(evt);
             }
         });
+        panelFormulario.add(botonAceptar, new org.netbeans.lib.awtextra.AbsoluteConstraints(168, 646, 115, 30));
 
         botonCancelar.setText("Cancelar");
         botonCancelar.setColorHover(new java.awt.Color(45, 116, 191));
@@ -279,100 +313,13 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
                 botonCancelarActionPerformed(evt);
             }
         });
+        panelFormulario.add(botonCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(319, 646, 115, 30));
 
-        javax.swing.GroupLayout panelFormularioLayout = new javax.swing.GroupLayout(panelFormulario);
-        panelFormulario.setLayout(panelFormularioLayout);
-        panelFormularioLayout.setHorizontalGroup(
-            panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelFormularioLayout.createSequentialGroup()
-                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(etiquetaAgregarProducto))
-                    .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelFormularioLayout.createSequentialGroup()
-                                .addGap(34, 34, 34)
-                                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(etiquetaTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(etiquetaNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(etiquetaPrecioVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(etiquetaExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(panelFormularioLayout.createSequentialGroup()
-                                        .addComponent(etiquetaDescripcion)
-                                        .addGap(19, 19, 19))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormularioLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(botonSeleccionarFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(panelNombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
-                            .addComponent(panelPrecioVenta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(panelExistencia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(comboBoxTipoProducto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelFormularioLayout.createSequentialGroup()
-                                .addComponent(botonAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(botonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(scrollPanelDescripcion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panelFormularioLayout.createSequentialGroup()
-                                .addComponent(fotoProducto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(51, 51, 51)))))
-                .addGap(22, 34, Short.MAX_VALUE))
-        );
-        panelFormularioLayout.setVerticalGroup(
-            panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelFormularioLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(etiquetaAgregarProducto)
-                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(fotoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addGap(89, 89, 89)
-                        .addComponent(botonSeleccionarFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(etiquetaNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(etiquetaTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboBoxTipoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(etiquetaPrecioVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelPrecioVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(etiquetaExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(etiquetaDescripcion)
-                    .addComponent(scrollPanelDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
-                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(botonAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(botonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(53, Short.MAX_VALUE))
-        );
-
-        getContentPane().add(panelFormulario, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 470, 710));
+        getContentPane().add(panelFormulario, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 510, 750));
 
         panelFondo1.setBackground(new java.awt.Color(29, 48, 107));
         panelFondo1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(panelFondo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 170, 800));
-
-        panelFondo2.setBackground(new java.awt.Color(204, 204, 204));
-        panelFondo2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        panel3.setBackground(new java.awt.Color(29, 48, 107));
-        panel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        panelFondo2.add(panel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 510, 400, 290));
-
-        getContentPane().add(panelFondo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 0, 470, 800));
+        getContentPane().add(panelFondo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 570, 800));
 
         pack();
         setLocationRelativeTo(null);
@@ -400,48 +347,55 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
             String extencion = url.substring(url.indexOf('.'), (url.length()));
             if(extencion.equals(".jpg")||extencion.equals(".png")){
                 return archivo;
-            }else{new AlertError(null, rootPaneCheckingEnabled, "Extencion incorrecta\n solo se aceptan .jpg o .png").setVisible(true);return null;}
+            }else{new AlertaError(null, rootPaneCheckingEnabled, "Extencion incorrecta\n solo se aceptan .jpg o .png").setVisible(true);return null;}
         }else{return null;}
     }
     
     private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
-        if(validarDatosProducto()){
-           try {
-               byte[] arregloImagen = null;
-               if(foto != null){
-                   arregloImagen = Files.readAllBytes(foto.toPath());
-               }
-               else if(producto.getFotoProducto() != null){
-                   arregloImagen = producto.getFotoProducto();
-               }
-                   producto.setNombre(txtNombre.getText());
-                   producto.setTipoProductoID(listaTipoProductos.get(comboBoxTipoProducto.getSelectedIndex()-1).getID());
-                   producto.setPrecio(Double.valueOf(txtPrecioVenta.getText()));
-                   producto.setExistencia(Integer.valueOf(txtExistencia.getText()));
-                   producto.setDescripcion(txtDescripcion.getText());
-                   producto.setFotoProducto(arregloImagen);
-                
-                           /*Producto productoAgregado = new Producto(txtNombre.getText(),
-                                        listaTipoProductos.get(comboBoxTipoProducto.getSelectedIndex()-1).getID(),
-                         Double.valueOf(txtPrecioVenta.getText()),
-                        Integer.valueOf(txtExistencia.getText()),
-                                        txtDescripcion.getText(), 
-                                        arregloImagen);*/
-                 
-                if(accion == Utilidades.AGREGAR){procedimientosDAO.agregarProducto(producto);}
-                else if(accion == Utilidades.EDITAR){System.out.println("SE ACTUALIZO");procedimientosDAO.actualizarProducto(producto);}
-                
-                
-                dispose();
-            } catch (SQLException ex) {
-                System.out.println("error: "+ex.getMessage());
-                new AlertError(null, rootPaneCheckingEnabled, "Algo salio mal al conectarse con la base de datos :(").setVisible(true);
-            } catch (IOException ex) {
-                new AlertError(null, rootPaneCheckingEnabled, "Algo salio mal al convertir el archivo :(").setVisible(true);
+        if(accion == Utilidades.AGREGAR || accion == Utilidades.EDITAR){
+            if(validarDatosProducto()){
+               try {
+                   byte[] arregloImagen = null;
+                   if(foto != null){
+                       arregloImagen = Files.readAllBytes(foto.toPath());
+                   }
+                   else if(producto.getFotoProducto() != null){
+                       arregloImagen = producto.getFotoProducto();
+                   }
+                       producto.setNombre(txtNombre.getText());
+                       producto.setTipoProductoID(listaTipoProductos.get(comboBoxTipoProducto.getSelectedIndex()-1).getID());
+                       producto.setPrecio(Double.valueOf(txtPrecioVenta.getText()));
+                       producto.setExistencia(Integer.valueOf(txtExistencia.getText()));
+                       producto.setDescripcion(txtDescripcion.getText());
+                       producto.setFotoProducto(arregloImagen);
+
+                    if(accion == Utilidades.AGREGAR){procedimientosDAO.agregarProducto(producto);}
+                    else if(accion == Utilidades.EDITAR){procedimientosDAO.actualizarProducto(producto);}
+
+
+                    dispose();
+                } catch (SQLException ex) {
+                    new AlertaError(null, rootPaneCheckingEnabled, "Algo salio mal al conectarse con la base de datos :(").setVisible(true);
+                } catch (IOException ex) {
+                    new AlertaError(null, rootPaneCheckingEnabled, "Algo salio mal al convertir el archivo :(").setVisible(true);
+                }
+            }
+            else{
+                new AlertaError(null, rootPaneCheckingEnabled, "No puede haber campos vacios!").setVisible(true);
             }
         }
-        else{
-            new AlertError(null, rootPaneCheckingEnabled, "No puede haber campos vacios!").setVisible(true);
+        else if(accion == Utilidades.ELIMINAR){
+            AlertaAdvertencia alertaWarning = new AlertaAdvertencia(null, rootPaneCheckingEnabled, "Esta seguro que desea eliminar el producto?");
+            alertaWarning.setVisible(true);
+            if(alertaWarning.getRespuesta() == 1){
+                try {
+                    procedimientosDAO.eliminarProducto(producto);
+                    new AlertaExitosa(null, rootPaneCheckingEnabled, "El producto se elimino correcatmente!").setVisible(true);
+                    this.dispose();
+                } catch (SQLException ex) {
+                    new AlertaError(null, rootPaneCheckingEnabled, "Algo salio mal al conectarse con la base de datos :(").setVisible(true);
+                }
+            }
         }
     }//GEN-LAST:event_botonAceptarActionPerformed
 
@@ -464,7 +418,7 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
             }
            
         } catch (SQLException ex) {
-            new AlertError(null, rootPaneCheckingEnabled, "Algo salio mal al conectarse con la base de datos :(").setVisible(true);
+            new AlertaError(null, rootPaneCheckingEnabled, "Algo salio mal al conectarse con la base de datos :(").setVisible(true);
         }
         
         
@@ -475,14 +429,24 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_botonCancelarActionPerformed
 
+    private void txtExistenciaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtExistenciaMousePressed
+       if(accion == Utilidades.EDITAR && !txtExistencia.isEditable()){
+            AlertaAdvertencia alertaEditarExistencia = new AlertaAdvertencia(null, rootPaneCheckingEnabled, "Esta seguro que desea editar la existencia?");
+            alertaEditarExistencia.setVisible(true);
+            if(alertaEditarExistencia.getRespuesta() == 1){
+                txtExistencia.setEditable(true);
+            }
+        }
+    }//GEN-LAST:event_txtExistenciaMousePressed
+
     
     
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private interfazGraficaComponentes.BotonPersonalizado botonAceptar;
-    private interfazGraficaComponentes.BotonPersonalizado botonCancelar;
-    private interfazGraficaComponentes.BotonPersonalizado botonSeleccionarFoto;
+    private componentes.BotonPersonalizado botonAceptar;
+    private componentes.BotonPersonalizado botonCancelar;
+    private componentes.BotonPersonalizado botonSeleccionarFoto;
     private javax.swing.JComboBox<String> comboBoxTipoProducto;
     private javax.swing.JLabel etiquetaAgregarProducto;
     private javax.swing.JLabel etiquetaDescripcion;
@@ -491,10 +455,8 @@ public class JDialogAgregarProducto extends javax.swing.JDialog {
     private javax.swing.JLabel etiquetaPrecioVenta;
     private javax.swing.JLabel etiquetaTipo;
     private rojerusan.RSPanelImage fotoProducto;
-    private javax.swing.JPanel panel3;
     private javax.swing.JPanel panelExistencia;
     private javax.swing.JPanel panelFondo1;
-    private javax.swing.JPanel panelFondo2;
     private javax.swing.JPanel panelFormulario;
     private javax.swing.JPanel panelNombre;
     private javax.swing.JPanel panelPrecioVenta;
