@@ -213,7 +213,6 @@ public class JFrameLogin extends javax.swing.JFrame {
                 datos[2] = resultSet.getString(3);
                 if((usuario.equals(datos[1])) && (contraseña.equals(datos[2]))){
                    Utilidades.ID_EMPLEADO = (int)datos[0];
-                   System.out.println("Empleado id:"+Utilidades.ID_EMPLEADO);
                    return true;
                 }
             }
