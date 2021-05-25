@@ -707,13 +707,11 @@ public class JFrameAdministarCatalago extends javax.swing.JFrame {
     private void opcionCrearFactura(int fila){
         try {
              JasperReport facturaReport = null;
-             String paths = "..\\src\\reportes\\Factura.jasper";
-             String path = "src\\reportes\\Factura.jasper";
              
              Map parametro = new HashMap();
              parametro.put("id_venta", listaVentasAux.get(fila).getID());
              
-             facturaReport = (JasperReport) JRLoader.loadObjectFromFile(path);
+             facturaReport = (JasperReport) JRLoader.loadObjectFromFile(ProcedimientosDAO.reporte);
             
              JasperPrint jprint = JasperFillManager.fillReport(facturaReport, parametro,ConexionDB.conexion);
             

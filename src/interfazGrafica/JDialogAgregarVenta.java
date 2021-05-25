@@ -630,6 +630,7 @@ public class JDialogAgregarVenta extends javax.swing.JDialog {
             alertaAdvertencia.setVisible(true);
             if(alertaAdvertencia.getRespuesta() == 1){
                 crearFactura(ventaAux.getID());
+                this.dispose();
             }else{
             this.dispose();}
         } catch (SQLException ex) {
@@ -641,12 +642,11 @@ public class JDialogAgregarVenta extends javax.swing.JDialog {
     private void crearFactura(int id_venta){
         try {
              JasperReport facturaReport = null;
-             String path = "src\\reportes\\Factura.jasper";
              
              Map parametro = new HashMap();
              parametro.put("id_venta", id_venta);
              
-             facturaReport = (JasperReport) JRLoader.loadObjectFromFile(path);
+             facturaReport = (JasperReport) JRLoader.loadObjectFromFile(ProcedimientosDAO.reporte);
             
              JasperPrint jprint = JasperFillManager.fillReport(facturaReport, parametro,ConexionDB.conexion);
             

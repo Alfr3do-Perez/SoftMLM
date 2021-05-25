@@ -26,6 +26,7 @@ public class ProcedimientosDAO {
   private Statement statement;
   private ResultSet resultSet;
   private CallableStatement CallableStatement;
+  public static String reporte = "reportes\\Factura.jasper";
   
     public ProcedimientosDAO(Connection conexion)
     {
