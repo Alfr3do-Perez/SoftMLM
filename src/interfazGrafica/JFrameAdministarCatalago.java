@@ -47,7 +47,7 @@ public class JFrameAdministarCatalago extends javax.swing.JFrame {
     private static ResultSet resultSet;
     private final List<Producto> listaProductos;
     private final List<Venta> listaVentas;
-    private List<Venta> listaVentasAux;
+    private final List<Venta> listaVentasAux;
 
     /**
      * Creates new form NewJFrame
@@ -63,6 +63,7 @@ public class JFrameAdministarCatalago extends javax.swing.JFrame {
         this.llenarTablaVentas();
         this.llenarTablaProductos();
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/icon.png")));
+        this.txtNombreUsuario.setText(Utilidades.NOMBRE_EMPLEADO);
         this.setVisible(true);
     }
 
@@ -85,7 +86,10 @@ public class JFrameAdministarCatalago extends javax.swing.JFrame {
         panelAdministrarCatalago = new javax.swing.JPanel();
         fotoAdministrarCatalago = new rojerusan.RSPanelImage();
         etiquetaAdministrarCatalago = new javax.swing.JLabel();
+        txtNombreUsuario = new javax.swing.JLabel();
+        botonCerrarSesion = new componentes.BotonPersonalizado();
         botonSalirVentas = new componentes.BotonPersonalizado();
+        txtNombreUsuario1 = new javax.swing.JLabel();
         panelContenidoAdministrarVentas = new javax.swing.JPanel();
         scrollPaneTablaVentas = new javax.swing.JScrollPane();
         tablaVentas = new javax.swing.JTable();
@@ -129,8 +133,8 @@ public class JFrameAdministarCatalago extends javax.swing.JFrame {
         etiquetaSoftMLM.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         etiquetaSoftMLM.setForeground(new java.awt.Color(255, 255, 255));
         etiquetaSoftMLM.setText("Soft-MLM");
-        panelBarraLateral.add(etiquetaSoftMLM, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, -1, -1));
-        panelBarraLateral.add(separadorSoftMLM, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 170, 20));
+        panelBarraLateral.add(etiquetaSoftMLM, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, -1, -1));
+        panelBarraLateral.add(separadorSoftMLM, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 170, 20));
 
         panelAdministrarVentas.setBackground(new java.awt.Color(0, 92, 179));
         panelAdministrarVentas.setPreferredSize(new java.awt.Dimension(270, 40));
@@ -252,6 +256,24 @@ public class JFrameAdministarCatalago extends javax.swing.JFrame {
 
         panelBarraLateral.add(panelAdministrarCatalago, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 190, 250, -1));
 
+        txtNombreUsuario.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtNombreUsuario.setForeground(new java.awt.Color(153, 153, 153));
+        txtNombreUsuario.setPreferredSize(new java.awt.Dimension(220, 25));
+        panelBarraLateral.add(txtNombreUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 210, 30));
+
+        botonCerrarSesion.setBackground(new java.awt.Color(29, 48, 107));
+        botonCerrarSesion.setText("Cerrar la sesión");
+        botonCerrarSesion.setColorHover(new java.awt.Color(29, 52, 122));
+        botonCerrarSesion.setColorNormal(new java.awt.Color(29, 48, 107));
+        botonCerrarSesion.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        botonCerrarSesion.setPreferredSize(new java.awt.Dimension(160, 40));
+        botonCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonCerrarSesionActionPerformed(evt);
+            }
+        });
+        panelBarraLateral.add(botonCerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 660, 250, 30));
+
         botonSalirVentas.setBackground(new java.awt.Color(29, 48, 107));
         botonSalirVentas.setText("SALIR");
         botonSalirVentas.setColorHover(new java.awt.Color(29, 52, 122));
@@ -263,7 +285,13 @@ public class JFrameAdministarCatalago extends javax.swing.JFrame {
                 botonSalirVentasActionPerformed(evt);
             }
         });
-        panelBarraLateral.add(botonSalirVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 650, 250, 50));
+        panelBarraLateral.add(botonSalirVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 610, 250, 50));
+
+        txtNombreUsuario1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        txtNombreUsuario1.setForeground(new java.awt.Color(255, 255, 255));
+        txtNombreUsuario1.setText("Usuario:");
+        txtNombreUsuario1.setPreferredSize(new java.awt.Dimension(220, 25));
+        panelBarraLateral.add(txtNombreUsuario1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 70, 30));
 
         panelFondo.add(panelBarraLateral, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 246, 700));
 
@@ -783,6 +811,12 @@ public class JFrameAdministarCatalago extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtBuscarVentaKeyReleased
 
+    private void botonCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarSesionActionPerformed
+        this.dispose();
+        JFrameLogin login = new JFrameLogin();
+        login.setVisible(true);
+    }//GEN-LAST:event_botonCerrarSesionActionPerformed
+
     
     private void eliminarProductosSelecionados(){
         int[] productosSeleccionados;
@@ -1057,6 +1091,7 @@ public class JFrameAdministarCatalago extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private componentes.BotonPersonalizado botonCerrarSesion;
     private componentes.BotonPersonalizado botonSalirVentas;
     private javax.swing.JLabel etiquetaAdministrarCatalago;
     private javax.swing.JLabel etiquetaAdministrarVentas;
@@ -1084,5 +1119,7 @@ public class JFrameAdministarCatalago extends javax.swing.JFrame {
     private javax.swing.JTable tablaProductos;
     private javax.swing.JTable tablaVentas;
     private javax.swing.JTextField txtBuscarVenta;
+    private javax.swing.JLabel txtNombreUsuario;
+    private javax.swing.JLabel txtNombreUsuario1;
     // End of variables declaration//GEN-END:variables
 }

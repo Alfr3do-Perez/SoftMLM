@@ -1,0 +1,17 @@
+Linterna:
+- Es un aparato portátil de iluminación que funciona por medio de pilas o baterías eléctricas.
+
+Martillo:
+- Es una herramienta de percusión utilizada para golpear directamente o indirectamente una pieza, causando su desplazamiento.
+
+Motosierra:
+- Es una máquina formada por un conjunto de dientes de sierra unidos a una cadena accionada por un motor que la hace girar a alta velocidad.
+
+Pala:
+- Es una herramienta de mano utilizada para excavar o mover materiales con cohesión relativamente pequeña.
+
+Serrucho:
+- Es una herramienta manual utilizada para practicar cortes, sobre todo en madera.
+
+Tornillo:
+- Es un dispositivo que se utiliza para la sujeción de un objeto.

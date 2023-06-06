@@ -180,7 +180,6 @@ public class JFrameLogin extends javax.swing.JFrame {
     
     
     private void botonIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIniciarSesionActionPerformed
-        //JFrameAdministarCatalago administrarCatalago = new JFrameAdministarCatalago();
        if(validarDatos()){
             char[] arrayC = txtContraseña.getPassword();
             String contraseña = new String(arrayC);
@@ -203,16 +202,18 @@ public class JFrameLogin extends javax.swing.JFrame {
 
     
     private Boolean comprobarUsuario(String usuario, String contraseña){
-        String sql = "SELECT EmpleadoID, Usuario, Contraseña FROM soft_mlmbd.empleado";
+        String sql = "SELECT EmpleadoID, Usuario, Contraseña, Nombre FROM soft_mlmbd.empleado";
         try {
             resultSet = procedimientosDAO.ejecututarQuery(sql);
             while(resultSet.next()){
-                Object[] datos = new Object[3];
+                Object[] datos = new Object[4];
                 datos[0] = resultSet.getInt(1);
                 datos[1] = resultSet.getString(2);
                 datos[2] = resultSet.getString(3);
+                datos[3] = resultSet.getString(4);
                 if((usuario.equals(datos[1])) && (contraseña.equals(datos[2]))){
                    Utilidades.ID_EMPLEADO = (int)datos[0];
+                   Utilidades.NOMBRE_EMPLEADO = (String) datos[3];
                    return true;
                 }
             }

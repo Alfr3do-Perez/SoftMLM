@@ -9,6 +9,8 @@ package DataBase;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -41,6 +43,14 @@ public class ConexionDB
         }
         catch(SQLException e){System.out.println("Error:"+e.getMessage());}
         return conexion;
+    }
+    
+    public void desconectar(){
+        try {
+            ConexionDB.conexion.close();
+        } catch (SQLException ex) {
+            System.out.println("Error en la base de datos: "+ex.getMessage());
+        }
     }
     
     public void Holamundo(){
